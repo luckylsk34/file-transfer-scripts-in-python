@@ -9,7 +9,7 @@ def mrecv(n):
 """
 clientsocket = socket.socket()
 
-host = '10.102.46.' + input('host ip : 10.102.46.')
+host = input('host ip : ')
 port = 9999
 
 clientsocket.connect((host, port))
@@ -21,9 +21,7 @@ except Exception as error:
 
 print('connected to', host, 'on', port)
 
-"""length = recvint()
-filename = mrecv(length)
-"""
+
 filename = input('filename :')
 
 with open(filename, 'wb') as f:

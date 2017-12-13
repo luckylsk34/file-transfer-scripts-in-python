@@ -23,7 +23,7 @@ while True:
 
 	print("Got a connection from ", str(addr))
 
-	filename = "my_messenger client.py"
+	filename = input("file to send: ")
 	"""sendint(sys.getsizeof(filename))
 	msend(filename)
 """
