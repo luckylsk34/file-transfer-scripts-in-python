@@ -2,6 +2,9 @@ import socket
 import time
 from os import sys
 
+def size_(a):
+	return len(a)
+
 def msend(message):
 	clientsocket.send(message.encode('ascii'))
 
@@ -23,10 +26,14 @@ while True:
 
 	print("Got a connection from ", str(addr))
 
-	filename = input("file to send: ")
-	"""sendint(sys.getsizeof(filename))
-	msend(filename)
-"""
+	filename = input("file to send(with extension): ")
+	lv1size = str(size_(filename))
+	lv2size = str(size_(lv1size))
+	
+	clientsocket.send(lv2size.encode('ascii'))
+	clientsocket.send(lv1size.encode('ascii'))
+	clientsocket.send(filename.encode('ascii'))
+	
 	f = open(filename, 'rb')
 	l = f.read(4096)
 	while l:

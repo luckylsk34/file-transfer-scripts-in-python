@@ -2,6 +2,9 @@ import socket
 import time
 import os
 
+def size_(a):
+	return len(a)
+
 def mrecv(n):
 	return (clientsocket.recv(n)).decode('ascii')
 """def recvint():
@@ -20,9 +23,11 @@ except Exception as error:
 	exit()
 
 print('connected to', host, 'on', port)
-
-
-filename = input('filename :')
+print('waiting for filename', end = '\r')
+lv2size = (clientsocket.recv(1)).decode('ascii')
+lv1size = (clientsocket.recv(int(lv2size))).decode('ascii')
+filename = (clientsocket.recv(int(lv1size))).decode('ascii')
+print('filename:', filename)
 
 with open(filename, 'wb') as f:
 	print('starting file transfer\nrecieving file...')
