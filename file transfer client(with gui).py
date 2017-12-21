@@ -38,6 +38,7 @@ with open(filename, 'wb') as f:
 		f.write(data)
 c2 = time.time()
 size = ((os.stat(filename)).st_size)/1024**2
+f.close()
 print('file transfer complete')
 
 print('\nStats\nTime taken :%0.2f' % (c2-c1))
