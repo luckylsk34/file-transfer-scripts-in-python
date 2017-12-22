@@ -7,7 +7,6 @@ from threading import *
 import time
 from queue import *
 import os
-import re
 
 clientconnected = False
 filename = ''
@@ -49,12 +48,6 @@ class serverWindow(QWidget):
 
 	def initUI(self):
 
-
-		'''
-		beon
-		yu gothic
-		'''
-
 		self.setFixedSize(400, 300)
 		self.frame = self.frameGeometry()
 		self.width = self.frame.width()
@@ -81,9 +74,11 @@ class serverWindow(QWidget):
 		self.lbl4 = QLabel('sending the file.', self)
 		self.centerwidget(self.lbl4, 180)
 		self.lbl4.hide()
+		self.lbl5 = QLabel('File sent', self)
+		self.centerwidget(self.lbl5, 13	0)
+		self.lbl5.hide()
 		self.lblsig = signal()
 		self.lblsig.sig.connect(self.showfoldermsgbox)
-
 
 		self.isshown = False
 		self.transfer = False
@@ -210,8 +205,8 @@ class serverWindow(QWidget):
 		percentvalue = 409600/filesize
 		while l:
 			self.client.send(l)
-			'''datasentpercent += percentvalue
-			self.progresssig.sig.emit(int(datasentpercent))'''
+			datasentpercent += percentvalue
+			self.progresssig.sig.emit(int(datasentpercent))
 			l = f.read(4096)
 
 		f.close()
@@ -257,6 +252,7 @@ class serverWindow(QWidget):
 	def textaftertransfer(self):
 		self.progressbar.deleteLater()
 		self.lbl4.deleteLater()
+		self.lbl5.show()
 
 	def setprogressvalue(self, v):
 		self.progressbar.setValue(v)
