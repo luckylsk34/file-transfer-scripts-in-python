@@ -75,7 +75,7 @@ class serverWindow(QWidget):
 		self.centerwidget(self.lbl4, 180)
 		self.lbl4.hide()
 		self.lbl5 = QLabel('File sent', self)
-		self.centerwidget(self.lbl5, 13	0)
+		self.centerwidget(self.lbl5, 130)
 		self.lbl5.hide()
 		self.lblsig = signal()
 		self.lblsig.sig.connect(self.showfoldermsgbox)
