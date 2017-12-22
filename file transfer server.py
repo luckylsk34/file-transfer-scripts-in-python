@@ -17,6 +17,7 @@ serversocket.bind((host, port))
 serversocket.listen(5)
 
 while True:
+	print('SERVER STARTED\nwaiting for connections.', end = '\r')
 	clientsocket, addr = serversocket.accept()
 	try:
 		msend('client accepted')
@@ -29,11 +30,11 @@ while True:
 	filename = input("file to send(with extension): ")
 	lv1size = str(size_(filename))
 	lv2size = str(size_(lv1size))
-	
+
 	clientsocket.send(lv2size.encode('ascii'))
 	clientsocket.send(lv1size.encode('ascii'))
 	clientsocket.send(filename.encode('ascii'))
-	
+
 	f = open(filename, 'rb')
 	l = f.read(4096)
 	while l:
