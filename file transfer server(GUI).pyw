@@ -73,7 +73,7 @@ class serverWindow(QWidget):
 		self.lbl4.resize(self.lbl4.sizeHint())
 		self.lbl4.move((self.width-self.lbl4.frameGeometry().width())/2+5, 30)
 		self.lbl4.hide()
-		self.lbl5 = QLabel('sending the file.', self)
+		self.lbl5 = QLabel('sending the file...', self)
 		self.centerwidget(self.lbl5, 180)
 		self.lbl5.hide()
 		self.lbl6 = QLabel('File sent', self)
@@ -82,7 +82,6 @@ class serverWindow(QWidget):
 		self.lblsig = signal()
 		self.lblsig.sig.connect(self.showfoldermsgbox)
 
-		self.isshown = False
 		self.transfer = False
 
 		self.msg = QMessageBox()
@@ -122,7 +121,6 @@ class serverWindow(QWidget):
 		self.t.put(self.t5)
 
 		self.show()
-		self.isshown = True
 
 	def center(self):
 		cp = QDesktopWidget().availableGeometry().center()
@@ -133,20 +131,20 @@ class serverWindow(QWidget):
 		global clientconnected
 
 		while not clientconnected:
-			if self.isshown:
-				self.lbl3.setText('waiting for connections.')
-				if not clientconnected:
-					time.sleep(0.125)
-				self.lbl3.setText('waiting for connections..')
-				if not clientconnected:
-					time.sleep(0.125)
-				self.lbl3.setText('waiting for connections...')
-				if not clientconnected:
-					time.sleep(0.125)
+			self.lbl3.setText('waiting for connections.')
+			if not clientconnected:
+				time.sleep(0.125)
+			self.lbl3.setText('waiting for connections..')
+			if not clientconnected:
+				time.sleep(0.125)
+			self.lbl3.setText('waiting for connections...')
+			if not clientconnected:
+				time.sleep(0.125)
 
 	def removetext(self):
 		time.sleep(0.125)
 		self.lbl1.deleteLater()
+		self.lbl2.deleteLater()
 		self.lbl3.deleteLater()
 
 	def startserver(self):
@@ -172,8 +170,12 @@ class serverWindow(QWidget):
 			pass
 
 		if os.path.isfile(filename):
+			self.client.send('1'.encode('ascii'))
+			self.transfer = True
 			self.sendfile()
 		else:
+			self.client.send('0'.encode('ascii'))
+			self.transfer = True
 			self.senddirectory()
 
 	def showdropbox(self):
@@ -195,6 +197,7 @@ class serverWindow(QWidget):
 		lv1size = str(size_(filename))
 		lv2size = str(size_(lv1size))
 
+
 		self.client.send(lv2size.encode('ascii'))
 		self.client.send(lv1size.encode('ascii'))
 		self.client.send(filename.encode('ascii'))
@@ -206,12 +209,9 @@ class serverWindow(QWidget):
 			datasentpercent += percentvalue
 			self.progresssig.sig.emit(int(datasentpercent))
 			l = f.read(4096)
-
 		f.close()
 
 		self.client.close()
-		self.transfer = True
-
 		self.textaftertransfer()
 
 	def senddirectory(self):
@@ -224,37 +224,34 @@ class serverWindow(QWidget):
 	def showfoldermsgbox(self):
 		self.msg.exec_()
 
-	def closeEvent(self, e):
-		self.isshown = False
-		e.accept()
-
 	def centerwidget(self, a, pos):
 		a.resize(a.sizeHint())
 		a.move((self.width-a.frameGeometry().width())/2, pos)
 
 	def textduringtransfer(self):
-		global filename
+		while not self.transfer:
+			pass
 
-		while not filename:
-			if self.isshown:
-				self.lbl5.setText('sending the file.')
-				if not clientconnected:
-					time.sleep(0.125)
-				self.lbl5.setText('sending the file..')
-				if not clientconnected:
-					time.sleep(0.125)
-				self.lbl5.setText('sending the file...')
-				if not clientconnected:
-					time.sleep(0.125)
+		while self.transfer:
+			self.lbl5.setText('sending the file.')
+			if self.transfer:
+				time.sleep(0.125)
+			self.lbl5.setText('sending the file..')
+			if self.transfer:
+				time.sleep(0.125)
+			self.lbl5.setText('sending the file...')
+			if self.transfer:
+				time.sleep(0.125)
 
 	def textaftertransfer(self):
+		self.transfer = False
+		time.sleep(0.125)
 		self.progressbar.deleteLater()
 		self.lbl5.deleteLater()
 		self.lbl6.show()
 
 	def setprogressvalue(self, v):
 		self.progressbar.setValue(v)
-
 
 if __name__ == '__main__':
 	app = QApplication([])
