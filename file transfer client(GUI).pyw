@@ -77,6 +77,7 @@ class clientWindow(QWidget):
         self.filename = ''
         self.transfer = False
         self.copytofolder = ''
+        self.currentdirectory = os.getcwd()
 
         self.t1 = Thread(target = self.textafterhostname)
         self.t1.setDaemon(True)
@@ -211,7 +212,7 @@ class clientWindow(QWidget):
             tmpf.write(data)
         tmpf.close()
         c2 = time.time()
-        size = ((os.stat(self.filename)).st_size)/1024**2
+        size = ((os.stat('temporaryfile.tmp')).st_size)/1024**2
 
         print('\nStats\nTime taken :%0.2f' % (c2-c1))
         print('size :%0.2f' % size, 'MB')
@@ -251,7 +252,7 @@ class clientWindow(QWidget):
                 time.sleep(0.125)
 
     def showfiledialogue(self):
-        self.copytofolder = self.filedialogue.getExistingDirectory(self, "Select Directory")
+        self.copytofolder = self.filedialogue.getExistingDirectory(self, "Select Directory", self.currentdirectory)
 
 if __name__ == '__main__':
     app = QApplication([])
